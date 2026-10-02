@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Salary Structures</h2>
+            <a href="{% url 'hr_salary_structure_create' %}" class="btn btn-primary">Create Structure</a>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Basic Salary</th>
+                                <th>HRA</th>
+                                <th>Transport</th>
+                                <th>Other</th>
+                                <th>PF %</th>
+                                <th>Tax %</th>
+                                <th>Effective From</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for structure in structures %}
+                            <tr>
+                                <td>{{ structure.employee.full_name }}</td>
+                                <td>{{ structure.basic_salary }}</td>
+                                <td>{{ structure.hra }}</td>
+                                <td>{{ structure.transport_allowance }}</td>
+                                <td>{{ structure.other_allowance }}</td>
+                                <td>{{ structure.pf_percentage }}%</td>
+                                <td>{{ structure.tax_percentage }}%</td>
+                                <td>{{ structure.effective_from }}</td>
+                                <td>
+                                    <a href="{% url 'hr_salary_structure_edit' structure.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="9" class="text-center">No salary structures found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

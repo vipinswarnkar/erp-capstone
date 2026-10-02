@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Pending Overtime Requests</h2>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Date</th>
+                                <th>Working Hours</th>
+                                <th>Requested Overtime</th>
+                                <th>Reason</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in overtime_requests %}
+                            <tr>
+                                <td>{{ request.employee.full_name }}</td>
+                                <td>{{ request.attendance.date }}</td>
+                                <td>{{ request.attendance.working_hours }} hrs</td>
+                                <td>{{ request.hours }} hrs</td>
+                                <td>{{ request.reason }}</td>
+                                <td>
+                                    <a href="{% url 'manager_overtime_approve' request.id %}" class="btn btn-sm btn-primary">Review</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No pending overtime requests.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

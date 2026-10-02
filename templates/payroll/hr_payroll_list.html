@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Payroll Management</h2>
+            <a href="{% url 'hr_payroll_run' %}" class="btn btn-primary">Run Payroll</a>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Month/Year</th>
+                                <th>Basic Salary</th>
+                                <th>Gross Salary</th>
+                                <th>Net Salary</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payroll in payrolls %}
+                            <tr>
+                                <td>{{ payroll.employee.full_name }}</td>
+                                <td>{{ payroll.month }}/{{ payroll.year }}</td>
+                                <td>{{ payroll.basic_salary }}</td>
+                                <td>{{ payroll.gross_salary }}</td>
+                                <td><strong>{{ payroll.net_salary }}</strong></td>
+                                <td>
+                                    <span class="badge bg-{% if payroll.status == 'LOCKED' %}success{% elif payroll.status == 'APPROVED' %}primary{% else %}warning{% endif %}">
+                                        {{ payroll.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if payroll.status == 'DRAFT' %}
+                                        <a href="{% url 'hr_payroll_approve' payroll.id %}" class="btn btn-sm btn-outline-success">Approve</a>
+                                    {% elif payroll.status == 'APPROVED' %}
+                                        <a href="{% url 'hr_payroll_lock' payroll.id %}" class="btn btn-sm btn-outline-primary">Lock</a>
+                                    {% elif payroll.status == 'LOCKED' %}
+                                        {% if payroll.payslip_file %}
+                                            <a href="{{ payroll.payslip_file.url }}" class="btn btn-sm btn-outline-primary" download>Download Payslip</a>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">No payroll records found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Request Overtime Approval</h2>
+        <p class="text-muted">Date: {{ attendance.date }}</p>
+        <a href="{% url 'overtime_request_list' %}" class="btn btn-outline-secondary mb-3">Back to Requests</a>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>Current Overtime:</strong> {{ attendance.overtime_hours }} hrs
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.hours.id_for_label }}" class="form-label">Overtime Hours</label>
+                        {{ form.hours }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.reason.id_for_label }}" class="form-label">Reason</label>
+                        {{ form.reason }}
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

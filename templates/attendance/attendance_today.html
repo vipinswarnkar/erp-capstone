@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Today's Attendance</h2>
+        <p class="text-muted">{{ today|date:"l, F d, Y" }}</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Shift Information
+            </div>
+            <div class="card-body">
+                {% if shift %}
+                    <p><strong>Shift:</strong> {{ shift.name }}</p>
+                    <p><strong>Time:</strong> {{ shift.start_time }} - {{ shift.end_time }}</p>
+                    <p><strong>Working Hours:</strong> {{ shift.working_hours }} hrs</p>
+                {% else %}
+                    <p class="text-warning">No shift assigned. Please contact HR.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Attendance Actions
+            </div>
+            <div class="card-body">
+                {% if attendance %}
+                    {% if attendance.check_in %}
+                        <p><strong>Check-in:</strong> {{ attendance.check_in|date:"H:i" }}</p>
+                        {% if attendance.check_out %}
+                            <p><strong>Check-out:</strong> {{ attendance.check_out|date:"H:i" }}</p>
+                            <p><strong>Working Hours:</strong> {{ attendance.working_hours }} hrs</p>
+                            <p><strong>Status:</strong> 
+                                <span class="badge bg-{% if attendance.status == 'PRESENT' %}success{% elif attendance.status == 'LATE' %}warning{% else %}secondary{% endif %}">
+                                    {{ attendance.status }}
+                                </span>
+                            </p>
+                            <button class="btn btn-secondary" disabled>Already Checked Out</button>
+                        {% else %}
+                            <a href="{% url 'check_out' %}" class="btn btn-danger">Check Out</a>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    {% if shift %}
+                        <a href="{% url 'check_in' %}" class="btn btn-success btn-lg">Check In</a>
+                    {% else %}
+                        <p class="text-muted">Cannot check in - no shift assigned</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

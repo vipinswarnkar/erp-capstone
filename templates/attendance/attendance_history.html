@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>My Attendance History</h2>
+        <a href="{% url 'attendance_today' %}" class="btn btn-outline-secondary mb-3">Back to Today</a>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Shift</th>
+                                <th>Check In</th>
+                                <th>Check Out</th>
+                                <th>Status</th>
+                                <th>Working Hours</th>
+                                <th>Late Minutes</th>
+                                <th>Overtime</th>
+                                <th>Finalized</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attendance in attendances %}
+                            <tr>
+                                <td>{{ attendance.date }}</td>
+                                <td>{{ attendance.shift.name|default:"-" }}</td>
+                                <td>{{ attendance.check_in|date:"H:i"|default:"-" }}</td>
+                                <td>{{ attendance.check_out|date:"H:i"|default:"-" }}</td>
+                                <td>
+                                    <span class="badge bg-{% if attendance.status == 'PRESENT' %}success{% elif attendance.status == 'LATE' %}warning{% elif attendance.status == 'ABSENT' %}danger{% elif attendance.status == 'LEAVE' %}info{% else %}secondary{% endif %}">
+                                        {{ attendance.status }}
+                                    </span>
+                                </td>
+                                <td>{{ attendance.working_hours|default:"-" }}</td>
+                                <td>{{ attendance.late_minutes }}</td>
+                                <td>{{ attendance.overtime_hours }} hrs</td>
+                                <td>
+                                    <span class="badge bg-{% if attendance.is_finalized %}success{% else %}secondary{% endif %}">
+                                        {% if attendance.is_finalized %}Yes{% else %}No{% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if not attendance.is_finalized %}
+                                        <a href="{% url 'correction_request_create' attendance.id %}" class="btn btn-sm btn-outline-warning">Request Correction</a>
+                                        {% if attendance.overtime_hours > 0 %}
+                                            <a href="{% url 'overtime_request_create' attendance.id %}" class="btn btn-sm btn-outline-info">Request OT</a>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="10" class="text-center">No attendance records found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

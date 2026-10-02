@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Employee Management</h2>
+            <a href="{% url 'hr_employee_create' %}" class="btn btn-primary">Create Employee</a>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Employee ID</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Designation</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for employee in employees %}
+                            <tr>
+                                <td>{{ employee.employee_id }}</td>
+                                <td>{{ employee.full_name }}</td>
+                                <td>{{ employee.department }}</td>
+                                <td>{{ employee.designation }}</td>
+                                <td>
+                                    <span class="badge bg-{% if employee.role == 'HR' %}danger{% elif employee.role == 'MANAGER' %}warning{% else %}primary{% endif %}">
+                                        {{ employee.role }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{% if employee.is_active %}success{% else %}secondary{% endif %}">
+                                        {% if employee.is_active %}Active{% else %}Inactive{% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'hr_employee_edit' employee.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">No employees found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Assign Shift to Employee</h2>
+        <a href="{% url 'hr_shift_assignment_list' %}" class="btn btn-outline-secondary mb-3">Back to List</a>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.employee.id_for_label }}" class="form-label">Employee</label>
+                        {{ form.employee }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.shift.id_for_label }}" class="form-label">Shift</label>
+                        {{ form.shift }}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.effective_from.id_for_label }}" class="form-label">Effective From</label>
+                            {{ form.effective_from }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.effective_to.id_for_label }}" class="form-label">Effective To (Optional)</label>
+                            {{ form.effective_to }}
+                            <small class="text-muted">Leave blank for ongoing assignment</small>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Assign Shift</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
